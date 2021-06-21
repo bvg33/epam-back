@@ -11,6 +11,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 @Component
 public class RequestProcessor {
+
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 

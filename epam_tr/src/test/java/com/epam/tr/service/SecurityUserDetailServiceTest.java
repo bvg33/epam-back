@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 public class SecurityUserDetailServiceTest {
+
     @Mock
     private UserDaoImpl dao = Mockito.mock(UserDaoImpl.class);
-
     @InjectMocks
     private SecurityUserDetailService service = new SecurityUserDetailService(dao);
 

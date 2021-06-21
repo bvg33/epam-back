@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SorterFactoryTest {
+
     @Test
     public void testCreateSorter() {
         FileNameSorter fileNameSorter = (FileNameSorter) SorterFactory.createSorter("sortByName");

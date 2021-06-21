@@ -21,6 +21,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
+
     @Mock
     private UserDaoImpl dao = Mockito.mock(UserDaoImpl.class);
     @Mock

@@ -21,10 +21,8 @@ public class JWTFilter extends GenericFilterBean {
 
     @Autowired
     private JWTProvider jwtProvider;
-
     @Autowired
     private SecurityUserDetailService service;
-
     @Autowired
     private RequestProcessor processor;
 

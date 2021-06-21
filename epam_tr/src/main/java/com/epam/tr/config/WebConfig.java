@@ -13,6 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_XML;
 @Configuration
 @EnableWebMvc
 public class WebConfig {
+
     @Bean
     public WebMvcConfigurer contentNegotiationConfigurer() {
         return new WebMvcConfigurerAdapter() {

@@ -5,6 +5,7 @@ import com.epam.tr.entities.FileEntity;
 import java.util.Comparator;
 
 public class SorterFactory {
+
     private static final String SORT_BY_NAME = "sortByName";
     private static final String SORT_BY_SIZE = "sortBySize";
     private static final String SORT_BY_TYPE = "sortByType";

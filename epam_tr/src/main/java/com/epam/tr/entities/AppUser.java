@@ -6,6 +6,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "epam.tr_users")
 public class AppUser {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

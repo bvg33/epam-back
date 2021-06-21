@@ -13,7 +13,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private Dao<AppUser> dao;
-
     private Validator<AppUser> validator;
 
     @Autowired

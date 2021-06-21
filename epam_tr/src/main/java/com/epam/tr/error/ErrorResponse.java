@@ -1,6 +1,7 @@
 package com.epam.tr.error;
 
 public class ErrorResponse {
+
     private String message;
     private String details;
 

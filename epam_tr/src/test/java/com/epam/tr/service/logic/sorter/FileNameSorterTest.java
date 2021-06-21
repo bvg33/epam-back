@@ -7,6 +7,7 @@ import org.testng.annotations.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileNameSorterTest {
+
     private final FileNameSorter sorter = new FileNameSorter();
 
     @Test

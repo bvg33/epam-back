@@ -9,12 +9,14 @@ import static com.epam.tr.entities.FileType.FILE;
 import static com.epam.tr.entities.FileType.FOLDER;
 
 public class FileEntityBuilder {
+
+    @Autowired
+    private PathBuilder builder;
+
     private static final String FILE_STRING = "file";
     private static final String TYPE = "type";
     private static final int FILE_SIZE = 0;
     private static final String NAME = "name";
-    @Autowired
-    private PathBuilder builder;
 
     public FileEntity buildFileEntity(String drive, MultiValueMap<String, String> allRequestParams) {
         String path = builder.createPath(drive, allRequestParams);

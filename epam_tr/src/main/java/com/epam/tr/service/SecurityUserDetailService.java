@@ -10,16 +10,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 
 @Component
 public class SecurityUserDetailService implements UserDetailsService {
-    private static final String USER_NOT_FOUND = "User not found";
 
+    private static final String USER_NOT_FOUND = "User not found";
     private UserDaoImpl dao;
 
     @Autowired

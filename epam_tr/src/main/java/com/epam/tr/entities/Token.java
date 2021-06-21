@@ -1,6 +1,7 @@
 package com.epam.tr.entities;
 
 public class Token {
+
     private String token;
 
     public Token(String token) {

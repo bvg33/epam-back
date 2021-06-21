@@ -14,6 +14,7 @@ import static com.epam.tr.security.secret.JWTSecretHolder.JWT_SECRET;
 
 @Component
 public class JWTProvider {
+
     private static final String EXCEPTION = "Not valid token";
 
     public String generateToken(String login) {

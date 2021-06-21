@@ -10,6 +10,7 @@ import static java.util.Objects.nonNull;
 
 @Component
 public class PathBuilder {
+
     public String createPath(String drive, MultiValueMap<String, String> allRequestParams) {
         String fullPath = "";
         if (nonNull(drive)) {
