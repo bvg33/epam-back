@@ -1,8 +1,8 @@
 package com.epam.tr.controller;
 
-import com.epam.tr.entities.FileEntity;
+import com.epam.tr.entities.FileSystemObject;
 import com.epam.tr.exceptions.InvalidCredentialsException;
-import com.epam.tr.exceptions.WrongFileException;
+import com.epam.tr.exceptions.InvalidFileException;
 import com.epam.tr.service.FileService;
 import com.epam.tr.service.logic.builder.FileEntityBuilder;
 import com.epam.tr.service.logic.builder.PathBuilder;
@@ -20,8 +20,7 @@ public class FileSystemController {
 
     @Autowired
     private FileService service;
-    @Autowired
-    private FileEntityBuilder builder;
+    private FileEntityBuilder builder = new FileEntityBuilder();
     @Autowired
     private PathBuilder pathBuilder;
 
@@ -36,16 +35,16 @@ public class FileSystemController {
     }
 
     @PostMapping("/createFile/{drive}")
-    public ResponseEntity create(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws WrongFileException, InvalidCredentialsException {
-        FileEntity fileEntity = builder.buildFileEntity(drive,allRequestParams);
-        service.create(fileEntity);
+    public ResponseEntity create(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException {
+        FileSystemObject fileSystemObject = builder.buildFileEntity(drive, allRequestParams);
+        service.create(fileSystemObject);
         return new ResponseEntity<>(CREATED);
     }
 
     @DeleteMapping("/deleteFile/{drive}")
-    public ResponseEntity delete(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws WrongFileException, InvalidCredentialsException {
-        FileEntity fileEntity = builder.buildFileEntity(drive,allRequestParams);
-        service.delete(fileEntity);
+    public ResponseEntity delete(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException {
+        FileSystemObject fileSystemObject = builder.buildFileEntity(drive, allRequestParams);
+        service.delete(fileSystemObject);
         return new ResponseEntity<>(NO_CONTENT);
     }
 

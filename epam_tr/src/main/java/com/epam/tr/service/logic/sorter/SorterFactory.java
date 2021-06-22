@@ -1,6 +1,6 @@
 package com.epam.tr.service.logic.sorter;
 
-import com.epam.tr.entities.FileEntity;
+import com.epam.tr.entities.FileSystemObject;
 
 import java.util.Comparator;
 
@@ -11,7 +11,7 @@ public class SorterFactory {
     private static final String SORT_BY_TYPE = "sortByType";
     private static final String ILLEGAL_ARGUMENTS = "Illegal arguments";
 
-    public static Comparator<FileEntity> createSorter(String sorterType) {
+    public static Comparator<FileSystemObject> createSorter(String sorterType) {
         switch (sorterType) {
             case SORT_BY_NAME:
                 return new FileNameSorter();

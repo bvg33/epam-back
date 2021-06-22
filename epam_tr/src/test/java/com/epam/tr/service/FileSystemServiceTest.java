@@ -1,7 +1,7 @@
 package com.epam.tr.service;
 
-import com.epam.tr.entities.FileEntity;
-import com.epam.tr.entities.FileType;
+import com.epam.tr.entities.FileSystemObject;
+import com.epam.tr.entities.FileSystemObjectType;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -18,9 +18,9 @@ public class FileSystemServiceTest {
     @Test
     public void testReadFileByPathWhenPathExist() {
         String path = "C:\\Users\\Dima\\IdeaProjects\\epam_tr\\src\\main\\webapp\\WEB-INF";
-        List<FileEntity> expected = Arrays.asList(new FileEntity(FileType.FILE, "web.xml", path + "\\web.xml", 0));
+        List<FileSystemObject> expected = Arrays.asList(new FileSystemObject(FileSystemObjectType.FILE, "web.xml", path + "\\web.xml", 0));
 
-        List<FileEntity> actual = service.readFileByPath(path);
+        List<FileSystemObject> actual = service.readFileByPath(path);
 
         assertEquals(expected, actual);
     }
@@ -28,9 +28,9 @@ public class FileSystemServiceTest {
     @Test
     public void testReadFileByPathWhenPathDontExist() {
         String path = "C:\\Users\\D";
-        List<FileEntity> expected = new ArrayList<>();
+        List<FileSystemObject> expected = new ArrayList<>();
 
-        List<FileEntity> actual = service.readFileByPath(path);
+        List<FileSystemObject> actual = service.readFileByPath(path);
 
         assertEquals(expected, actual);
     }

@@ -29,8 +29,8 @@ public class SecurityUserDetailServiceTest {
         AppUser appUser = new AppUser("login1", "password1", UserRole.USER);
         List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("ROLE_" + appUser.getUserRole().toString()));
         UserDetails expected = new User(appUser.getLogin(), appUser.getPassword(), authorities);
-
         when(dao.getUserByNickname(Mockito.anyString())).thenReturn(appUser);
+
         UserDetails actual = service.loadUserByUsername("login1");
 
         assertEquals(expected, actual);

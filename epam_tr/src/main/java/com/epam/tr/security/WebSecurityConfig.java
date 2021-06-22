@@ -1,5 +1,6 @@
 package com.epam.tr.security;
 
+import com.epam.tr.entities.UserRole;
 import com.epam.tr.security.jwt.JWTFilter;
 import com.epam.tr.service.SecurityUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.epam.tr.entities.UserRole.ADMIN;
+import static com.epam.tr.entities.UserRole.USER;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -22,8 +26,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private SecurityUserDetailService service;
 
-    private static final String ADMIN = "ADMIN";
-    private static final String USER = "USER";
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -37,13 +39,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                /*//All
-                .antMatchers(POST, "/users/**", "/auth").permitAll()
-                .antMatchers(GET,"/auth").permitAll()
-                //User
-                .antMatchers(GET, "/files/**").hasAnyRole(ADMIN,USER)
-                //Admin
-                .anyRequest().hasRole(ADMIN)*/
+                //All
+                /* .antMatchers(POST, "/users/**", "/auth").permitAll()
+                 .antMatchers(GET,"/auth").permitAll()
+                 //User
+                 .antMatchers(GET, "/files/**").hasAnyRole(ADMIN,USER)
+                 //Admin
+                 .anyRequest().hasRole(ADMIN)*/
                 .anyRequest().permitAll()
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -2,7 +2,7 @@ package com.epam.tr.controller;
 
 import com.epam.tr.error.ErrorResponse;
 import com.epam.tr.exceptions.InvalidCredentialsException;
-import com.epam.tr.exceptions.WrongFileException;
+import com.epam.tr.exceptions.InvalidFileException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,7 +14,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class ErrorController {
     private static final String ERROR = "error code =";
 
-    @ExceptionHandler({WrongFileException.class, InvalidCredentialsException.class})
+    @ExceptionHandler({InvalidFileException.class, InvalidCredentialsException.class})
     public final ResponseEntity<Object> handleBindExceptions(Exception ex) {
         String details = ex.getMessage();
         ErrorResponse errorResponse = new ErrorResponse(ERROR + BAD_REQUEST, details);

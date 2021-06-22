@@ -2,6 +2,7 @@ package com.epam.tr.service;
 
 import com.epam.tr.dao.Dao;
 import com.epam.tr.entities.AppUser;
+import com.epam.tr.entities.UserRole;
 import com.epam.tr.exceptions.InvalidCredentialsException;
 import com.epam.tr.service.logic.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,11 @@ public class UserServiceImpl implements UserService {
     public void update(AppUser oldEntity, AppUser newEntity) throws InvalidCredentialsException {
         checkValid(oldEntity);
         checkValid(newEntity);
-        dao.update(new AppUser(oldEntity.getId(), newEntity.getLogin(), newEntity.getPassword(), newEntity.getUserRole()));
+        int id = oldEntity.getId();
+        String login = newEntity.getLogin();
+        String password = newEntity.getPassword();
+        UserRole role = newEntity.getUserRole();
+        dao.update(new AppUser(id, login, password, role));
     }
 
     @Override

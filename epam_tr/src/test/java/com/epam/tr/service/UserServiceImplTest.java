@@ -35,8 +35,8 @@ public class UserServiceImplTest {
     @Test
     public void testGetAllUsers() {
         List<AppUser> expected = new ArrayList<>(users);
-
         when(dao.getAll()).thenReturn(users);
+
         List<AppUser> actual = service.getAllUsers();
 
         assertEquals(expected, actual);
@@ -52,21 +52,34 @@ public class UserServiceImplTest {
 
         doAnswer(invocation -> actual.add(newUser)).when(dao).insert(newUser);
         when(validator.isValid(Mockito.anyObject())).thenReturn(true);
+
         service.create(newUser);
 
         assertEquals(actual, expected);
+    }
+
+    @Test(expected = InvalidCredentialsException.class)
+    public void testCreateNegative() throws InvalidCredentialsException {
+        AppUser newUser = new AppUser(null, null);
+
+        service.create(newUser);
     }
 
     @Test
     public void testDelete() throws InvalidCredentialsException {
         List<AppUser> actual = new ArrayList<>(users);
         List<AppUser> expected = Arrays.asList(new AppUser("login2", "password2"));
-
         doAnswer(invocation -> actual.remove(0)).when(dao).delete(Mockito.anyObject());
         when(validator.isValid(Mockito.anyObject())).thenReturn(true);
+
         service.delete(new AppUser("login1", "password1"));
 
         assertEquals(expected, actual);
+    }
+
+    @Test(expected = InvalidCredentialsException.class)
+    public void testDeleteNegative() throws InvalidCredentialsException {
+        service.delete(new AppUser(null, "password1"));
     }
 
 }

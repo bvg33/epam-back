@@ -4,6 +4,7 @@ import com.epam.tr.entities.AppUser;
 import org.springframework.stereotype.Component;
 
 import static java.util.Objects.nonNull;
+
 @Component
 public class UserValidator implements Validator<AppUser> {
 

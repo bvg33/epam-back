@@ -2,6 +2,7 @@ package com.epam.tr.security.jwt;
 
 import com.epam.tr.security.request.RequestProcessor;
 import com.epam.tr.service.SecurityUserDetailService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,19 +27,21 @@ public class JWTFilter extends GenericFilterBean {
     @Autowired
     private RequestProcessor processor;
 
+    private static final Logger LOGGER = Logger.getLogger(JWTFilter.class);
+
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
         String token = processor.getTokenFromRequest((HttpServletRequest) request);
-        try {
-            if (!token.isEmpty() && jwtProvider.validateToken(token)) {
-                String userLogin = processor.getLoginFromToken(token);
-                UserDetails userDetails = service.loadUserByUsername(userLogin);
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(auth);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!token.isEmpty() && jwtProvider.validateToken(token)) {
+            String userLogin = processor.getLoginFromToken(token);
+            UserDetails userDetails = service.loadUserByUsername(userLogin);
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        chain.doFilter(request, response);
+        try {
+            chain.doFilter(request, response);
+        } catch (IOException | ServletException e) {
+            LOGGER.error(e.getMessage());
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.epam.tr.service;
 
-import com.epam.tr.dao.UserDaoImpl;
+import com.epam.tr.dao.Dao;
 import com.epam.tr.entities.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,10 +18,10 @@ import static java.util.Collections.singletonList;
 public class SecurityUserDetailService implements UserDetailsService {
 
     private static final String USER_NOT_FOUND = "User not found";
-    private UserDaoImpl dao;
+    private Dao<AppUser> dao;
 
     @Autowired
-    public SecurityUserDetailService(UserDaoImpl dao) {
+    public SecurityUserDetailService(Dao<AppUser> dao) {
         this.dao = dao;
     }
 
