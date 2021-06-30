@@ -1,13 +1,14 @@
 package com.epam.tr.service;
 
 import com.epam.tr.dto.FileDto;
+import com.epam.tr.dto.FileRequestDto;
 import com.epam.tr.entities.FileSystemObjectType;
 import com.epam.tr.service.logic.builder.FileEntityBuilder;
+import com.epam.tr.service.logic.builder.PathBuilder;
 import com.epam.tr.service.logic.sorter.SorterFactory;
 import com.epam.tr.service.logic.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MultiValueMap;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +31,14 @@ public class FileSystemService implements FileService {
 
     @Autowired
     private Validator<FileDto> validator;
-    private FileEntityBuilder builder = new FileEntityBuilder();
+    @Autowired
+    private FileEntityBuilder builder;
+    @Autowired
+    private PathBuilder pathBuilder;
 
     @Override
-    public void create(String drive, MultiValueMap<String, String> allRequestParams) throws IOException {
-        FileDto fileDto = builder.buildFileEntity(drive, allRequestParams);
+    public void create(FileRequestDto requestDto) throws IOException {
+        FileDto fileDto = builder.buildFileEntity(requestDto);
         if (validator.isValid(fileDto)) {
             if (fileDto.getType() == FOLDER) {
                 createFolder(fileDto);
@@ -46,19 +50,8 @@ public class FileSystemService implements FileService {
     }
 
     @Override
-    public void update(FileDto oldFile, FileDto newFile) throws IOException {
-        if (validator.isValid(newFile)) {
-            String oldFileAbsolutePath = createAbsolutePath(oldFile);
-            String newFileAbsolutePath = createAbsolutePath(newFile);
-            Path fileToMovePath = Paths.get(newFileAbsolutePath);
-            Path targetPath = Paths.get(oldFileAbsolutePath);
-            Files.move(fileToMovePath, targetPath);
-        }
-    }
-
-    @Override
-    public void delete(String drive, MultiValueMap<String, String> allRequestParams) throws IOException {
-        FileDto fileDto = builder.buildFileEntity(drive, allRequestParams);
+    public void delete(FileRequestDto requestDto) throws IOException {
+        FileDto fileDto = builder.buildFileEntity(requestDto);
         if (validator.isValid(fileDto)) {
             String absolutePath = createAbsolutePath(fileDto);
             Path path = Paths.get(absolutePath);
@@ -84,7 +77,8 @@ public class FileSystemService implements FileService {
     }
 
     @Override
-    public List<FileDto> readFileByPath(String path) {
+    public List<FileDto> readFileByPath(FileRequestDto requestDto) {
+        String path = pathBuilder.createPath(requestDto);
         List<FileDto> files = goThroughFileTree(path);
         return files;
     }
@@ -103,16 +97,20 @@ public class FileSystemService implements FileService {
     }
 
     @Override
-    public List<FileDto> filter(String path, String parameter) {
+    public List<FileDto> filter(FileRequestDto requestDto) {
+        String path = pathBuilder.createPath(requestDto);
         List<FileDto> list = goThroughFileTree(path);
+        String parameter = requestDto.getParameter();
         Comparator<FileDto> sorter = SorterFactory.createSorter(parameter);
         list.sort(sorter);
         return list;
     }
 
     @Override
-    public List<FileDto> search(String path, String mask) {
+    public List<FileDto> search(FileRequestDto requestDto) {
+        String path = pathBuilder.createPath(requestDto);
         List<FileDto> fileList = goThroughFileTree(path);
+        String mask = requestDto.getMask();
         Pattern pattern = Pattern.compile(mask);
         return fileList
                 .stream()

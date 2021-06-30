@@ -1,5 +1,6 @@
 package com.epam.tr.service.logic.builder;
 
+import com.epam.tr.dto.FileRequestDto;
 import org.junit.Test;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -15,7 +16,7 @@ public class PathBuilderTest {
         map.add("folder","folder2");
         String expected = "c:\\folder1\\folder2";
 
-        String actual = builder.createPath("c",map);
+        String actual = builder.createPath(new FileRequestDto());
 
         assertEquals(expected,actual);
     }

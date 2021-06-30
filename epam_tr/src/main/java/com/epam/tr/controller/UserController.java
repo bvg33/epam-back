@@ -3,11 +3,13 @@ package com.epam.tr.controller;
 import com.epam.tr.dto.UserDto;
 import com.epam.tr.entities.AppUser;
 import com.epam.tr.exceptions.InvalidCredentialsException;
-import com.epam.tr.service.UserServiceImpl;
+import com.epam.tr.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -16,12 +18,12 @@ import static org.springframework.http.HttpStatus.*;
 public class UserController {
 
     @Autowired
-    private UserServiceImpl service;
+    private UserService service;
     @Autowired
     private BCryptPasswordEncoder encoder;
 
     @PostMapping
-    public void createNewUser(@RequestBody UserDto userDto) throws InvalidCredentialsException {
+    public void createNewUser(@RequestBody UserDto userDto) throws InvalidCredentialsException, IOException {
         String login = userDto.getLogin();
         String password = userDto.getPassword();
         String encodePassword = encoder.encode(password);

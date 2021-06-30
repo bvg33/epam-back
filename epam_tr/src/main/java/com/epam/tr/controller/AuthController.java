@@ -1,5 +1,6 @@
 package com.epam.tr.controller;
 
+import com.epam.tr.dto.UserDto;
 import com.epam.tr.entities.AppUser;
 import com.epam.tr.dto.Token;
 import com.epam.tr.exceptions.InvalidCredentialsException;
