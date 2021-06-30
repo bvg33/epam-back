@@ -29,7 +29,7 @@ public class AuthController {
     private static final String INVALID_CREDENTIALS = "There was an error with your Login/Password combination. Please try again.";
 
     @PostMapping
-    public ResponseEntity<Token> auth(@RequestBody AppUser user) throws InvalidCredentialsException, UsernameNotFoundException {
+    public ResponseEntity<Token> auth(@RequestBody UserDto user) throws InvalidCredentialsException, UsernameNotFoundException {
         UserDetails userDetails = userDetailService.loadUserByUsername(user.getLogin());
         String password = user.getPassword();
         String hashPassword = userDetails.getPassword();
