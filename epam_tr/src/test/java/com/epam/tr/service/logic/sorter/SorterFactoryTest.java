@@ -8,9 +8,9 @@ public class SorterFactoryTest {
 
     @Test
     public void testCreateSorter() {
-        FileNameSorter fileNameSorter = (FileNameSorter) SorterFactory.createSorter("sortByName");
-        FileSizeSorter fileSizeSorter = (FileSizeSorter) SorterFactory.createSorter("sortBySize");
-        FileTypeSorter fileTypeSorter = (FileTypeSorter) SorterFactory.createSorter("sortByType");
+        FileNameSorter fileNameSorter = (FileNameSorter) SorterFactory.create("sortByName");
+        FileSizeSorter fileSizeSorter = (FileSizeSorter) SorterFactory.create("sortBySize");
+        FileTypeSorter fileTypeSorter = (FileTypeSorter) SorterFactory.create("sortByType");
 
         assertEquals(FileNameSorter.class,fileNameSorter.getClass());
         assertEquals(FileSizeSorter.class,fileSizeSorter.getClass());

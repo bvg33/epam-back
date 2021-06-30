@@ -13,7 +13,7 @@ public class SorterFactory {
     private static final String SORT_BY_SIZE_DESC = "sortBySize_desc";
     private static final String SORT_BY_TYPE_DESC = "sortByType_desc";
 
-    public static Comparator<FileDto> createSorter(String sorterType) {
+    public static Comparator<FileDto> create(String sorterType) {
         switch (sorterType) {
             case SORT_BY_NAME_ASC:
                 return new FileNameSorter();

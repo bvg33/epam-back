@@ -98,7 +98,7 @@ public class FileSystemService implements FileService {
         String path = pathBuilder.createPath(requestDto);
         List<FileDto> list = traverse(path);
         String parameter = requestDto.getParameter();
-        Comparator<FileDto> sorter = SorterFactory.createSorter(parameter);
+        Comparator<FileDto> sorter = SorterFactory.create(parameter);
         list.sort(sorter);
         return list;
     }
