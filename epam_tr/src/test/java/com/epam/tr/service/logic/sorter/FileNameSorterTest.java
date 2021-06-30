@@ -1,6 +1,6 @@
 package com.epam.tr.service.logic.sorter;
 
-import com.epam.tr.entities.FileSystemObject;
+import com.epam.tr.dto.FileDto;
 import com.epam.tr.entities.FileSystemObjectType;
 import org.testng.annotations.Test;
 
@@ -12,8 +12,8 @@ public class FileNameSorterTest {
 
     @Test
     public void testCompareDifferentEntitiesWhereFirstSmaller() {
-        FileSystemObject firstEntity = new FileSystemObject(FileSystemObjectType.FILE, "name1", "path", 0);
-        FileSystemObject secondEntity = new FileSystemObject(FileSystemObjectType.FILE, "name2", "path", 0);
+        FileDto firstEntity = new FileDto(FileSystemObjectType.FILE, "name1", "path", 0);
+        FileDto secondEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 0);
 
         assertEquals(-1, sorter.compare(firstEntity, secondEntity));
 
@@ -21,16 +21,16 @@ public class FileNameSorterTest {
 
     @Test
     public void testCompareSameEntities() {
-        FileSystemObject secondEntity = new FileSystemObject(FileSystemObjectType.FILE, "name2", "path", 0);
-        FileSystemObject thirdEntity = new FileSystemObject(FileSystemObjectType.FILE, "name2", "path", 0);
+        FileDto secondEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 0);
+        FileDto thirdEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 0);
 
         assertEquals(0, sorter.compare(secondEntity, thirdEntity));
     }
 
     @Test
     public void testCompareDifferentEntitiesWhereFirstIsBigger() {
-        FileSystemObject fourthEntity = new FileSystemObject(FileSystemObjectType.FILE, "name", "path", 0);
-        FileSystemObject firstEntity = new FileSystemObject(FileSystemObjectType.FILE, "name1", "path", 0);
+        FileDto fourthEntity = new FileDto(FileSystemObjectType.FILE, "name", "path", 0);
+        FileDto firstEntity = new FileDto(FileSystemObjectType.FILE, "name1", "path", 0);
 
         assertEquals(1, sorter.compare(firstEntity, fourthEntity));
     }

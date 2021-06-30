@@ -1,15 +1,19 @@
 package com.epam.tr.service;
 
-import com.epam.tr.entities.FileSystemObject;
+import com.epam.tr.dto.FileDto;
 import com.epam.tr.entities.FileSystemObjectType;
-import com.epam.tr.exceptions.InvalidFileException;
+import com.epam.tr.service.logic.builder.FileEntityBuilder;
 import com.epam.tr.service.logic.sorter.SorterFactory;
 import com.epam.tr.service.logic.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,97 +21,98 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.epam.tr.entities.FileSystemObjectType.*;
+import static java.io.File.listRoots;
+import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 
 @Service
 public class FileSystemService implements FileService {
 
     @Autowired
-    private Validator<FileSystemObject> validator;
-
-    private static final String NOT_VALID = "Not valid file parameters";
-    private static final String CREATE_EXCEPTION = "create file exception";
-    public static final String ASC = "asc";
-    public static final String DESC = "desc";
+    private Validator<FileDto> validator;
+    private FileEntityBuilder builder = new FileEntityBuilder();
 
     @Override
-    public void create(FileSystemObject fileSystemObject) throws InvalidFileException {
-        checkFile(fileSystemObject);
-        try {
-            if (fileSystemObject.getType() == FOLDER) {
-                createFolder(fileSystemObject);
+    public void create(String drive, MultiValueMap<String, String> allRequestParams) throws IOException {
+        FileDto fileDto = builder.buildFileEntity(drive, allRequestParams);
+        if (validator.isValid(fileDto)) {
+            if (fileDto.getType() == FOLDER) {
+                createFolder(fileDto);
             }
-            if (fileSystemObject.getType() == FILE) {
-                createFile(fileSystemObject);
+            if (fileDto.getType() == FILE) {
+                createFile(fileDto);
             }
-        } catch (IOException e) {
-            throw new InvalidFileException(CREATE_EXCEPTION);
         }
     }
 
     @Override
-    public void update(FileSystemObject oldFile, FileSystemObject newFile) throws InvalidFileException {
-        checkFile(oldFile);
-        checkFile(newFile);
-        String oldFileAbsolutePath = createAbsolutePath(oldFile);
-        String newFileAbsolutePath = createAbsolutePath(newFile);
-        new File(oldFileAbsolutePath).renameTo(new File(newFileAbsolutePath));
-    }
-
-    @Override
-    public void delete(FileSystemObject fileSystemObject) throws InvalidFileException {
-        checkFile(fileSystemObject);
-        String absolutePath = createAbsolutePath(fileSystemObject);
-        new File(absolutePath).delete();
-    }
-
-    private void checkFile(FileSystemObject fileSystemObject) throws InvalidFileException {
-        if (!validator.isValid(fileSystemObject)) {
-            throw new InvalidFileException(NOT_VALID);
+    public void update(FileDto oldFile, FileDto newFile) throws IOException {
+        if (validator.isValid(newFile)) {
+            String oldFileAbsolutePath = createAbsolutePath(oldFile);
+            String newFileAbsolutePath = createAbsolutePath(newFile);
+            Path fileToMovePath = Paths.get(newFileAbsolutePath);
+            Path targetPath = Paths.get(oldFileAbsolutePath);
+            Files.move(fileToMovePath, targetPath);
         }
     }
 
-    private void createFile(FileSystemObject fileSystemObject) throws IOException {
+    @Override
+    public void delete(String drive, MultiValueMap<String, String> allRequestParams) throws IOException {
+        FileDto fileDto = builder.buildFileEntity(drive, allRequestParams);
+        if (validator.isValid(fileDto)) {
+            String absolutePath = createAbsolutePath(fileDto);
+            Path path = Paths.get(absolutePath);
+            Files.delete(path);
+        }
+    }
+
+    private void createFile(FileDto fileSystemObject) throws IOException {
         String absolutePath = createAbsolutePath(fileSystemObject);
-        new File(absolutePath).createNewFile();
+        Path path = Paths.get(absolutePath);
+        Files.createFile(path);
     }
 
-    private void createFolder(FileSystemObject fileSystemObject) {
-        new File(fileSystemObject.getPath(), fileSystemObject.getName()).mkdir();
+    private void createFolder(FileDto fileDto) throws IOException {
+        Path path = Paths.get(createAbsolutePath(fileDto));
+        Files.createDirectory(path);
     }
 
-    private String createAbsolutePath(FileSystemObject fileSystemObject) {
-        String path = fileSystemObject.getPath();
-        String name = fileSystemObject.getName();
+    private String createAbsolutePath(FileDto fileDto) {
+        String path = fileDto.getPath();
+        String name = fileDto.getName();
         return String.format("%s\\%s", path, name);
     }
 
     @Override
-    public List<FileSystemObject> readFileByPath(String path) {
-        List<FileSystemObject> files;
+    public List<FileDto> readFileByPath(String path) {
+        List<FileDto> files = goThroughFileTree(path);
+        return files;
+    }
+
+    private List<FileDto> goThroughFileTree(String path) {
+        List<FileDto> files = new ArrayList<>();
         if (path.isEmpty()) {
             files = getRoots();
         } else {
             File dir = new File(path);
-            files = scanDir(dir);
+            if (dir.isDirectory()) {
+                files = scanDir(dir);
+            }
         }
         return files;
     }
 
     @Override
-    public List<FileSystemObject> filter(String path, String parameter, String sortType) {
-        List<FileSystemObject> list = readFileByPath(path);
-        Comparator<FileSystemObject> sorter = SorterFactory.createSorter(parameter);
-        if (sortType.equals(DESC)) {
-            sorter = sorter.reversed();
-        }
+    public List<FileDto> filter(String path, String parameter) {
+        List<FileDto> list = goThroughFileTree(path);
+        Comparator<FileDto> sorter = SorterFactory.createSorter(parameter);
         list.sort(sorter);
         return list;
     }
 
     @Override
-    public List<FileSystemObject> search(String path, String mask) {
-        List<FileSystemObject> fileList = this.readFileByPath(path);
+    public List<FileDto> search(String path, String mask) {
+        List<FileDto> fileList = goThroughFileTree(path);
         Pattern pattern = Pattern.compile(mask);
         return fileList
                 .stream()
@@ -115,28 +120,22 @@ public class FileSystemService implements FileService {
                 .collect(Collectors.toList());
     }
 
-    private List<FileSystemObject> getRoots() {
-        List<FileSystemObject> files = new ArrayList<>();
-        for (File file : File.listRoots()) {
+    private List<FileDto> getRoots() {
+        return stream(listRoots()).map(file -> {
             String path = file.getPath();
             String absolutePath = file.getAbsolutePath();
             long totalSpace = file.getTotalSpace();
-            files.add(new FileSystemObject(DRIVE, path, absolutePath, totalSpace));
-        }
-        return files;
+            return new FileDto(DRIVE, path, absolutePath, totalSpace);
+        }).collect(Collectors.toList());
     }
 
-    private List<FileSystemObject> scanDir(File dir) {
-        List<FileSystemObject> files = new ArrayList<>();
-        if (dir.isDirectory()) {
-            for (File item : requireNonNull(dir.listFiles())) {
-                FileSystemObjectType type = item.isDirectory() ? FOLDER : FILE;
-                String name = item.getName();
-                String absolutePath = item.getAbsolutePath();
-                long length = item.length();
-                files.add(new FileSystemObject(type, name, absolutePath, length));
-            }
-        }
-        return files;
+    private List<FileDto> scanDir(File dir) {
+        return stream(requireNonNull(dir.listFiles())).map(file -> {
+            FileSystemObjectType type = file.isDirectory() ? FOLDER : FILE;
+            String name = file.getName();
+            String absolutePath = file.getAbsolutePath();
+            long length = file.length();
+            return new FileDto(type, name, absolutePath, length);
+        }).collect(Collectors.toList());
     }
 }

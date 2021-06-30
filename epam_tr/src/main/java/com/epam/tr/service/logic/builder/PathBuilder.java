@@ -17,9 +17,7 @@ public class PathBuilder {
             List<String> folders = allRequestParams.get("folder");
             StringJoiner joiner = new StringJoiner("\\");
             if (nonNull(folders)) {
-                for (String folder : folders) {
-                    joiner.add(folder);
-                }
+                folders.forEach(joiner::add);
             }
             String pathToFile = joiner.toString();
             fullPath = drive + ":\\" + pathToFile;

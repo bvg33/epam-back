@@ -1,7 +1,7 @@
 package com.epam.tr.controller;
 
 import com.epam.tr.entities.AppUser;
-import com.epam.tr.entities.Token;
+import com.epam.tr.dto.Token;
 import com.epam.tr.exceptions.InvalidCredentialsException;
 import com.epam.tr.security.jwt.JWTProvider;
 import com.epam.tr.service.SecurityUserDetailService;
@@ -26,7 +26,7 @@ public class AuthController {
     private JWTProvider jwtProvider;
     @Autowired
     private BCryptPasswordEncoder encoder;
-    private static final String INVALID_CREDENTIALS = "Invalid Credentials";
+    private static final String INVALID_CREDENTIALS = "There was an error with your Login/Password combination. Please try again.";
 
     @PostMapping
     public ResponseEntity<Token> auth(@RequestBody AppUser user) throws InvalidCredentialsException, UsernameNotFoundException {

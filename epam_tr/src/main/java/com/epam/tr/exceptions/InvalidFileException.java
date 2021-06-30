@@ -1,6 +1,6 @@
 package com.epam.tr.exceptions;
 
-public class InvalidFileException extends Exception {
+public class InvalidFileException extends RuntimeException {
 
     public InvalidFileException() {
     }

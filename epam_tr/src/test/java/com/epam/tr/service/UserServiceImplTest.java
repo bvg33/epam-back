@@ -1,6 +1,7 @@
 package com.epam.tr.service;
 
 import com.epam.tr.dao.UserDaoImpl;
+import com.epam.tr.dto.UserDto;
 import com.epam.tr.entities.AppUser;
 import com.epam.tr.exceptions.InvalidCredentialsException;
 import com.epam.tr.service.logic.validator.UserValidator;
@@ -37,7 +38,7 @@ public class UserServiceImplTest {
         List<AppUser> expected = new ArrayList<>(users);
         when(dao.getAll()).thenReturn(users);
 
-        List<AppUser> actual = service.getAllUsers();
+        List<UserDto> actual = service.getAllUsers();
 
         assertEquals(expected, actual);
     }
@@ -72,14 +73,9 @@ public class UserServiceImplTest {
         doAnswer(invocation -> actual.remove(0)).when(dao).delete(Mockito.anyObject());
         when(validator.isValid(Mockito.anyObject())).thenReturn(true);
 
-        service.delete(new AppUser("login1", "password1"));
+        service.delete(0);
 
         assertEquals(expected, actual);
-    }
-
-    @Test(expected = InvalidCredentialsException.class)
-    public void testDeleteNegative() throws InvalidCredentialsException {
-        service.delete(new AppUser(null, "password1"));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.epam.tr.service.logic.builder;
 
-import com.epam.tr.entities.FileSystemObject;
+import com.epam.tr.dto.FileDto;
 import com.epam.tr.entities.FileSystemObjectType;
 import org.osgi.service.component.annotations.Component;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,11 @@ public class FileEntityBuilder {
     private static final int FILE_SIZE = 0;
     private static final String NAME = "name";
 
-    public FileSystemObject buildFileEntity(String drive, MultiValueMap<String, String> allRequestParams) {
+    public FileDto buildFileEntity(String drive, MultiValueMap<String, String> allRequestParams) {
         String path = builder.createPath(drive, allRequestParams);
         String stringFileType = allRequestParams.getFirst(TYPE);
         FileSystemObjectType type = (stringFileType.equals(FILE_STRING)) ? FILE : FOLDER;
         String name = allRequestParams.getFirst(NAME);
-        return new FileSystemObject(type, name, path, FILE_SIZE);
+        return new FileDto(type, name, path, FILE_SIZE);
     }
 }

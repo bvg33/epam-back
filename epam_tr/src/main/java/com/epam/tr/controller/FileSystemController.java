@@ -1,6 +1,6 @@
 package com.epam.tr.controller;
 
-import com.epam.tr.entities.FileSystemObject;
+import com.epam.tr.dto.FileDto;
 import com.epam.tr.exceptions.InvalidCredentialsException;
 import com.epam.tr.exceptions.InvalidFileException;
 import com.epam.tr.service.FileService;
@@ -11,8 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.http.HttpStatus.*;
+import java.io.IOException;
+import java.util.List;
 
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequestMapping("/files")
@@ -20,7 +22,6 @@ public class FileSystemController {
 
     @Autowired
     private FileService service;
-    private FileEntityBuilder builder = new FileEntityBuilder();
     @Autowired
     private PathBuilder pathBuilder;
 
@@ -31,20 +32,19 @@ public class FileSystemController {
     @GetMapping(value = {"/getFile", "/getFile/{drive}"})
     public ResponseEntity getFiles(@PathVariable(required = false) String drive, @RequestParam MultiValueMap<String, String> allRequestParams) {
         String path = pathBuilder.createPath(drive, allRequestParams);
-        return ResponseEntity.status(OK).body(service.readFileByPath(path));
+        List<FileDto> list = service.readFileByPath(path);
+        return ResponseEntity.status(OK).body(list);
     }
 
-    @PostMapping("/createFile/{drive}")
-    public ResponseEntity create(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException {
-        FileSystemObject fileSystemObject = builder.buildFileEntity(drive, allRequestParams);
-        service.create(fileSystemObject);
+    @PostMapping("/{drive}")
+    public ResponseEntity create(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException, IOException {
+        service.create(drive,allRequestParams);
         return new ResponseEntity<>(CREATED);
     }
 
-    @DeleteMapping("/deleteFile/{drive}")
+    @DeleteMapping("/{drive}")
     public ResponseEntity delete(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException {
-        FileSystemObject fileSystemObject = builder.buildFileEntity(drive, allRequestParams);
-        service.delete(fileSystemObject);
+        service.delete(drive,allRequestParams);
         return new ResponseEntity<>(NO_CONTENT);
     }
 
@@ -52,14 +52,15 @@ public class FileSystemController {
     public ResponseEntity filterFiles(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) {
         String path = pathBuilder.createPath(drive, allRequestParams);
         String parameter = allRequestParams.getFirst(PARAMETER);
-        String sortType = allRequestParams.getFirst(SORT_TYPE);
-        return ResponseEntity.status(OK).body(service.filter(path, parameter, sortType));
+        List<FileDto> list = service.filter(path, parameter);
+        return ResponseEntity.status(OK).body(list);
     }
 
     @GetMapping("/search/{drive}")
     public ResponseEntity findFilesByMask(@PathVariable String drive, @RequestParam MultiValueMap<String, String> allRequestParams) {
         String path = pathBuilder.createPath(drive, allRequestParams);
         String mask = allRequestParams.getFirst(MASK);
-        return ResponseEntity.status(OK).body(service.search(path, mask));
+        List<FileDto> list = service.search(path, mask);
+        return ResponseEntity.status(OK).body(list);
     }
 }

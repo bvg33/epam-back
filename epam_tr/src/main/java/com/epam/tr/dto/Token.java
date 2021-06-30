@@ -1,4 +1,4 @@
-package com.epam.tr.entities;
+package com.epam.tr.dto;
 
 public class Token {
 

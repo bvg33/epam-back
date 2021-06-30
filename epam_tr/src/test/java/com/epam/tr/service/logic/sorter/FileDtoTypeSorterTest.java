@@ -6,18 +6,18 @@ import org.testng.annotations.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class FileSizeSorterTest {
+public class FileDtoTypeSorterTest {
 
-    private final FileSizeSorter sorter = new FileSizeSorter();
+    private final FileTypeSorter sorter = new FileTypeSorter();
 
     @Test
     public void testCompare() {
-        FileDto firstEntity = new FileDto(FileSystemObjectType.FILE, "name1", "path", 1);
-        FileDto secondEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 2);
-        FileDto thirdEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 2);
+        FileDto firstEntity = new FileDto(FileSystemObjectType.FOLDER, "name1", "path", 0);
+        FileDto secondEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 0);
+        FileDto thirdEntity = new FileDto(FileSystemObjectType.FILE, "name2", "path", 0);
         FileDto fourthEntity = new FileDto(FileSystemObjectType.FILE,"name","path",0);
 
-        assertEquals(-1,sorter.compare(firstEntity,secondEntity));
+        assertEquals(-1,sorter.compare(secondEntity,firstEntity));
         assertEquals(0,sorter.compare(secondEntity,thirdEntity));
         assertEquals(1,sorter.compare(firstEntity,fourthEntity));
     }

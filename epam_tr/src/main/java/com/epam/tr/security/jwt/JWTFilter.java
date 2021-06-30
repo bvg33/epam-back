@@ -27,10 +27,8 @@ public class JWTFilter extends GenericFilterBean {
     @Autowired
     private RequestProcessor processor;
 
-    private static final Logger LOGGER = Logger.getLogger(JWTFilter.class);
-
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         String token = processor.getTokenFromRequest((HttpServletRequest) request);
         if (!token.isEmpty() && jwtProvider.validateToken(token)) {
             String userLogin = processor.getLoginFromToken(token);
@@ -38,10 +36,6 @@ public class JWTFilter extends GenericFilterBean {
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-        try {
-            chain.doFilter(request, response);
-        } catch (IOException | ServletException e) {
-            LOGGER.error(e.getMessage());
-        }
+        chain.doFilter(request, response);
     }
 }

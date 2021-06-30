@@ -1,6 +1,7 @@
 package com.epam.tr.service;
 
 import com.epam.tr.dao.Dao;
+import com.epam.tr.dto.UserDto;
 import com.epam.tr.entities.AppUser;
 import com.epam.tr.entities.UserRole;
 import com.epam.tr.exceptions.InvalidCredentialsException;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,40 +27,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void create(AppUser entity) throws InvalidCredentialsException {
-        checkValid(entity);
+        validator.isValid(entity);
         dao.insert(entity);
     }
 
-    private void checkValid(AppUser entity) throws InvalidCredentialsException {
-        if (!validator.isValid(entity)) {
-            throw new InvalidCredentialsException("Invalid login or password");
-        }
-    }
-
     @Override
-    public void update(AppUser oldEntity, AppUser newEntity) throws InvalidCredentialsException {
-        checkValid(oldEntity);
-        checkValid(newEntity);
-        int id = oldEntity.getId();
+    public void update(int oldUserId, UserDto newEntity) throws InvalidCredentialsException {
+        validator.isValid(newEntity.to());
         String login = newEntity.getLogin();
         String password = newEntity.getPassword();
         UserRole role = newEntity.getUserRole();
-        dao.update(new AppUser(id, login, password, role));
+        dao.update(new AppUser(oldUserId, login, password, role));
     }
 
     @Override
-    public void delete(AppUser entity) throws InvalidCredentialsException {
-        checkValid(entity);
+    public void delete(int userId) throws InvalidCredentialsException {
+        AppUser entity = dao.getById(userId);
         dao.delete(entity);
     }
 
     @Override
-    public List<AppUser> getAllUsers() {
-        return dao.getAll();
+    public List<UserDto> getAllUsers() {
+        List<AppUser> users = dao.getAll();
+        return users.stream().map(UserDto::from).collect(toList());
     }
 
     @Override
-    public AppUser getUserById(int id) {
-        return dao.getById(id);
+    public UserDto getUserById(int id) {
+        AppUser user = dao.getById(id);
+        return UserDto.from(user);
     }
 }

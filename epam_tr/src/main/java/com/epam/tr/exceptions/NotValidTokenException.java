@@ -1,6 +1,6 @@
 package com.epam.tr.exceptions;
 
-public class NotValidTokenException extends Exception {
+public class NotValidTokenException extends RuntimeException {
 
     public NotValidTokenException() {
     }

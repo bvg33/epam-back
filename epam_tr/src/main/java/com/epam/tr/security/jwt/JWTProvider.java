@@ -10,7 +10,6 @@ import java.util.Date;
 
 import static com.epam.tr.security.secret.JWTSecretHolder.JWT_SECRET;
 
-
 @Component
 public class JWTProvider {
 

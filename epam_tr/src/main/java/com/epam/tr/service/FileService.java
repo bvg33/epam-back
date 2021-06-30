@@ -1,13 +1,23 @@
 package com.epam.tr.service;
 
-import com.epam.tr.entities.FileSystemObject;
+import com.epam.tr.dto.FileDto;
+import com.epam.tr.exceptions.InvalidCredentialsException;
+import com.epam.tr.exceptions.InvalidFileException;
+import org.springframework.util.MultiValueMap;
 
+import java.io.IOException;
 import java.util.List;
 
-public interface FileService extends Service<FileSystemObject> {
-    List<FileSystemObject> readFileByPath(String path);
+public interface FileService {
+    List<FileDto> readFileByPath(String path);
 
-    List<FileSystemObject> filter(String path, String parameter, String sortType);
+    List<FileDto> filter(String path, String parameter);
 
-    List<FileSystemObject> search(String path, String mask);
+    List<FileDto> search(String path, String mask);
+
+    void create(String drive, MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException, IOException;
+
+    void update(FileDto oldEntity, FileDto newEntity) throws InvalidFileException, InvalidCredentialsException, IOException;
+
+    void delete(String drive, MultiValueMap<String, String> allRequestParams) throws InvalidFileException, InvalidCredentialsException, IOException;
 }
