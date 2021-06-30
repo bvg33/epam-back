@@ -22,7 +22,7 @@ public class SecurityUserDetailServiceTest {
     @Mock
     private UserDaoImpl dao = Mockito.mock(UserDaoImpl.class);
     @InjectMocks
-    private SecurityUserDetailService service = new SecurityUserDetailService(dao);
+    private SecurityUserDetailService service = new SecurityUserDetailService();
 
     @Test
     public void testLoadUserByUsername() {

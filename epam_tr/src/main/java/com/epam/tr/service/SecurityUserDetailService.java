@@ -17,19 +17,15 @@ import static java.util.Collections.singletonList;
 @Component
 public class SecurityUserDetailService implements UserDetailsService {
 
-    private static final String USER_NOT_FOUND = "User not found";
-    private Dao<AppUser> dao;
-
     @Autowired
-    public SecurityUserDetailService(Dao<AppUser> dao) {
-        this.dao = dao;
-    }
+    private Dao<AppUser> dao;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = dao.getUserByNickname(username);
         if (appUser == null) {
-            throw new UsernameNotFoundException(USER_NOT_FOUND);
+            String message = String.format("User with username %s doesnt exist", username);
+            throw new UsernameNotFoundException(message);
         }
         List<SimpleGrantedAuthority> authorities = singletonList(new SimpleGrantedAuthority("ROLE_" + appUser.getUserRole().toString()));
         String login = appUser.getLogin();

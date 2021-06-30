@@ -1,10 +1,12 @@
 package com.epam.tr.dto;
 
-import com.epam.tr.entities.FileSystemObjectType;
-
 import java.util.Objects;
 
 public class FileDto {
+
+    public enum FileSystemObjectType {
+        FILE, FOLDER, DRIVE
+    }
 
     private FileSystemObjectType fileSystemObjectType;
     private String name;
@@ -39,7 +41,7 @@ public class FileDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         FileDto that = (FileDto) o;
-        return fileSystemObjectType == this.fileSystemObjectType && Objects.equals(name, that.name) && Objects.equals(path, that.path);
+        return Objects.equals(name, that.name) && Objects.equals(path, that.path);
     }
 
     @Override

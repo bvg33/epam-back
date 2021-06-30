@@ -47,13 +47,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAll() {
         List<AppUser> users = dao.getAll();
         return users.stream().map(UserDto::from).collect(toList());
     }
 
     @Override
-    public UserDto getUserById(int id) {
+    public UserDto getById(int id) {
         AppUser user = dao.getById(id);
         return UserDto.from(user);
     }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.epam.tr.security.secret.JWTSecretHolder.JWT_SECRET;
+import static com.epam.tr.security.JWTSecretHolder.JWT_SECRET;
 import static org.springframework.util.StringUtils.hasText;
 
 @Component

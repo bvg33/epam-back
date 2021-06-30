@@ -22,31 +22,31 @@ public class FileSystemController {
     private FileService service;
 
     @GetMapping(value = {"/getFile", "/getFile/{drive}"})
-    public ResponseEntity getFiles(FileRequestDto requestDto) {
-        List<FileDto> list = service.readFileByPath(requestDto);
+    public ResponseEntity getAll(FileRequestDto requestDto) {
+        List<FileDto> list = service.readByPath(requestDto);
         return ResponseEntity.status(OK).body(list);
     }
 
     @PostMapping("/{drive}")
-    public ResponseEntity create(FileRequestDto requestDto) throws InvalidFileException, InvalidCredentialsException, IOException {
+    public ResponseEntity create(FileRequestDto requestDto) throws IOException {
         service.create(requestDto);
         return new ResponseEntity<>(CREATED);
     }
 
     @DeleteMapping("/{drive}")
-    public ResponseEntity delete(FileRequestDto requestDto) throws InvalidFileException, InvalidCredentialsException, IOException {
+    public ResponseEntity delete(FileRequestDto requestDto) throws IOException {
         service.delete(requestDto);
         return new ResponseEntity<>(NO_CONTENT);
     }
 
     @GetMapping("/filter/{drive}")
-    public ResponseEntity filterFiles(FileRequestDto requestDto) {
+    public ResponseEntity filter(FileRequestDto requestDto) {
         List<FileDto> list = service.filter(requestDto);
         return ResponseEntity.status(OK).body(list);
     }
 
     @GetMapping("/search/{drive}")
-    public ResponseEntity findFilesByMask(FileRequestDto requestDto) {
+    public ResponseEntity searcher(FileRequestDto requestDto) {
         List<FileDto> list = service.search(requestDto);
         return ResponseEntity.status(OK).body(list);
     }

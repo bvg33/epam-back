@@ -1,4 +1,4 @@
-package com.epam.tr.security.secret;
+package com.epam.tr.security;
 
 
 import io.jsonwebtoken.impl.crypto.MacProvider;

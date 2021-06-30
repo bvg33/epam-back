@@ -38,7 +38,7 @@ public class UserServiceImplTest {
         List<AppUser> expected = new ArrayList<>(users);
         when(dao.getAll()).thenReturn(users);
 
-        List<UserDto> actual = service.getAllUsers();
+        List<UserDto> actual = service.getAll();
 
         assertEquals(expected, actual);
     }

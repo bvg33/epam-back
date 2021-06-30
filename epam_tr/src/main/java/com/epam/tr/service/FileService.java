@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.util.List;
 
 public interface FileService {
-    List<FileDto> readFileByPath(FileRequestDto requestDt);
+    List<FileDto> readByPath(FileRequestDto requestDt);
 
     List<FileDto> filter(FileRequestDto requestDt);
 
     List<FileDto> search(FileRequestDto requestDt);
 
-    void create(FileRequestDto requestDto) throws InvalidFileException, InvalidCredentialsException, IOException;
+    void create(FileRequestDto requestDto) throws IOException;
 
-    void delete(FileRequestDto requestDto) throws InvalidFileException, InvalidCredentialsException, IOException;
+    void delete(FileRequestDto requestDto) throws IOException;
 }

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-import static com.epam.tr.security.secret.JWTSecretHolder.JWT_SECRET;
+import static com.epam.tr.security.JWTSecretHolder.JWT_SECRET;
 
 @Component
 public class JWTProvider {

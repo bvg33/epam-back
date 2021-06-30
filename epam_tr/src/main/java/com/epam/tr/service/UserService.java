@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.util.List;
 
 public interface UserService{
-    List<UserDto> getAllUsers();
+    List<UserDto> getAll();
 
-    UserDto getUserById(int id);
+    UserDto getById(int id);
 
-    void create(AppUser Entity) throws InvalidFileException, InvalidCredentialsException, IOException;
+    void create(AppUser Entity);
 
-    void update(int oldUserId, UserDto newEntity) throws InvalidFileException, InvalidCredentialsException;
+    void update(int oldUserId, UserDto newEntity);
 
-    void delete(int userId) throws InvalidFileException, InvalidCredentialsException;
+    void delete(int userId);
 }
