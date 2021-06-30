@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,31 +23,31 @@ public class FileSystemController {
     private FileService service;
 
     @GetMapping(value = {"/getFile", "/getFile/{drive}"})
-    public ResponseEntity getAll(FileRequestDto requestDto) {
+    public ResponseEntity getAll(@Valid FileRequestDto requestDto) {
         List<FileDto> list = service.readByPath(requestDto);
         return ResponseEntity.status(OK).body(list);
     }
 
     @PostMapping("/{drive}")
-    public ResponseEntity create(FileRequestDto requestDto) throws IOException {
+    public ResponseEntity create(@Valid FileRequestDto requestDto) {
         service.create(requestDto);
         return new ResponseEntity<>(CREATED);
     }
 
     @DeleteMapping("/{drive}")
-    public ResponseEntity delete(FileRequestDto requestDto) throws IOException {
+    public ResponseEntity delete(@Valid FileRequestDto requestDto) {
         service.delete(requestDto);
         return new ResponseEntity<>(NO_CONTENT);
     }
 
     @GetMapping("/filter/{drive}")
-    public ResponseEntity filter(FileRequestDto requestDto) {
+    public ResponseEntity filter(@Valid FileRequestDto requestDto) {
         List<FileDto> list = service.filter(requestDto);
         return ResponseEntity.status(OK).body(list);
     }
 
     @GetMapping("/search/{drive}")
-    public ResponseEntity searcher(FileRequestDto requestDto) {
+    public ResponseEntity search(@Valid FileRequestDto requestDto) {
         List<FileDto> list = service.search(requestDto);
         return ResponseEntity.status(OK).body(list);
     }

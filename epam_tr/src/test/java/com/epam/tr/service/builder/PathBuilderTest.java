@@ -1,4 +1,4 @@
-package com.epam.tr.service.logic.builder;
+package com.epam.tr.service.builder;
 
 import com.epam.tr.dto.FileRequestDto;
 import org.junit.Test;

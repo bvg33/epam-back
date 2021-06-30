@@ -4,17 +4,13 @@ import java.util.Objects;
 
 public class FileDto {
 
-    public enum FileSystemObjectType {
-        FILE, FOLDER, DRIVE
-    }
-
-    private FileSystemObjectType fileSystemObjectType;
+    private FileDtoType fileDtoType;
     private String name;
     private String path;
     private long size;
 
-    public FileDto(FileSystemObjectType fileSystemObjectType, String name, String path, long size) {
-        this.fileSystemObjectType = fileSystemObjectType;
+    public FileDto(FileDtoType fileDtoType, String name, String path, long size) {
+        this.fileDtoType = fileDtoType;
         this.name = name;
         this.path = path;
         this.size = size;
@@ -24,8 +20,8 @@ public class FileDto {
         return size;
     }
 
-    public FileSystemObjectType getType() {
-        return fileSystemObjectType;
+    public FileDtoType getType() {
+        return fileDtoType;
     }
 
     public String getName() {
@@ -46,6 +42,10 @@ public class FileDto {
 
     @Override
     public int hashCode() {
-        return Objects.hash(fileSystemObjectType, name, path);
+        return Objects.hash(fileDtoType, name, path);
+    }
+
+    public enum FileDtoType {
+        FILE, FOLDER, DRIVE
     }
 }

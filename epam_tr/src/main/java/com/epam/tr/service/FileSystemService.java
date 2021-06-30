@@ -2,10 +2,10 @@ package com.epam.tr.service;
 
 import com.epam.tr.dto.FileDto;
 import com.epam.tr.dto.FileRequestDto;
-import com.epam.tr.service.logic.builder.FileEntityBuilder;
-import com.epam.tr.service.logic.builder.PathBuilder;
-import com.epam.tr.service.logic.sorter.SorterFactory;
-import com.epam.tr.service.logic.validator.Validator;
+import com.epam.tr.exceptions.InvalidFileException;
+import com.epam.tr.service.builder.FileEntityBuilder;
+import com.epam.tr.service.builder.PathBuilder;
+import com.epam.tr.service.sorter.SorterFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.epam.tr.dto.FileDto.FileSystemObjectType.*;
+import static com.epam.tr.dto.FileDto.FileDtoType.*;
 import static java.io.File.listRoots;
 import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
@@ -29,18 +29,19 @@ import static java.util.Objects.requireNonNull;
 public class FileSystemService implements FileService {
 
     @Autowired
-    private Validator<FileDto> validator;
-    @Autowired
     private FileEntityBuilder builder;
     @Autowired
     private PathBuilder pathBuilder;
 
     @Override
-    public void create(FileRequestDto requestDto) throws IOException {
+    public void create(FileRequestDto requestDto)  {
         FileDto fileDto = builder.buildFileEntity(requestDto);
-        validator.isValid(fileDto);
         if (fileDto.getType() == FOLDER) {
-            createFolder(fileDto);
+            try {
+                createFolder(fileDto);
+            } catch (IOException e) {
+                throw new InvalidFileException(e.getMessage());
+            }
         }
         if (fileDto.getType() == FILE) {
             createFile(fileDto);
@@ -48,18 +49,25 @@ public class FileSystemService implements FileService {
     }
 
     @Override
-    public void delete(FileRequestDto requestDto) throws IOException {
+    public void delete(FileRequestDto requestDto){
         FileDto fileDto = builder.buildFileEntity(requestDto);
-        validator.isValid(fileDto);
         String absolutePath = createAbsolutePath(fileDto);
         Path path = Paths.get(absolutePath);
-        Files.delete(path);
+        try {
+            Files.delete(path);
+        } catch (IOException e) {
+            throw new InvalidFileException(e.getMessage());
+        }
     }
 
-    private void createFile(FileDto fileSystemObject) throws IOException {
+    private void createFile(FileDto fileSystemObject) {
         String absolutePath = createAbsolutePath(fileSystemObject);
         Path path = Paths.get(absolutePath);
-        Files.createFile(path);
+        try {
+            Files.createFile(path);
+        } catch (IOException e) {
+            throw new InvalidFileException(e.getMessage());
+        }
     }
 
     private void createFolder(FileDto fileDto) throws IOException {
@@ -97,7 +105,7 @@ public class FileSystemService implements FileService {
     public List<FileDto> filter(FileRequestDto requestDto) {
         String path = pathBuilder.createPath(requestDto);
         List<FileDto> list = traverse(path);
-        String parameter = requestDto.getParameter();
+        String parameter = requestDto.getSorterParameter();
         Comparator<FileDto> sorter = SorterFactory.create(parameter);
         list.sort(sorter);
         return list;
@@ -126,7 +134,7 @@ public class FileSystemService implements FileService {
 
     private List<FileDto> scanDir(File dir) {
         return stream(requireNonNull(dir.listFiles())).map(file -> {
-            FileDto.FileSystemObjectType type = file.isDirectory() ? FOLDER : FILE;
+            FileDto.FileDtoType type = file.isDirectory() ? FOLDER : FILE;
             String name = file.getName();
             String absolutePath = file.getAbsolutePath();
             long length = file.length();

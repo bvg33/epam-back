@@ -1,4 +1,4 @@
-package com.epam.tr.security.request;
+package com.epam.tr.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

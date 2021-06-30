@@ -16,7 +16,7 @@ public interface FileService {
 
     List<FileDto> search(FileRequestDto requestDt);
 
-    void create(FileRequestDto requestDto) throws IOException;
+    void create(FileRequestDto requestDto);
 
-    void delete(FileRequestDto requestDto) throws IOException;
+    void delete(FileRequestDto requestDto);
 }

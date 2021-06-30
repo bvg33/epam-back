@@ -1,6 +1,7 @@
 package com.epam.tr.dao;
 
 import com.epam.tr.entities.AppUser;
+import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -12,6 +13,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class UserDaoImpl implements Dao<AppUser> {
@@ -39,7 +41,7 @@ public class UserDaoImpl implements Dao<AppUser> {
 
     @Override
     public void delete(AppUser entity) {
-        entity = entityManager.find(AppUser.class, entity.getId());
+        entity = getById(entity.getId());
         entityManager.getTransaction().begin();
         entityManager.remove(entity);
         entityManager.getTransaction().commit();
@@ -56,7 +58,12 @@ public class UserDaoImpl implements Dao<AppUser> {
 
     @Override
     public AppUser getById(int id) {
-        return entityManager.find(AppUser.class, id);
+        AppUser appUser = entityManager.find(AppUser.class, id);
+        if(Objects.isNull(appUser)){
+            String message = String.format("Cant find user with id = %s.",id);
+            throw new ResourceNotFoundException(message);
+        }
+        return appUser;
     }
 
     @Override

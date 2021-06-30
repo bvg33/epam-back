@@ -1,9 +1,9 @@
-package com.epam.tr.service.logic.sorter;
+package com.epam.tr.service.sorter;
 
 import com.epam.tr.dto.FileDto;
 import org.testng.annotations.Test;
 
-import static com.epam.tr.dto.FileDto.FileSystemObjectType.FILE;
+import static com.epam.tr.dto.FileDto.FileDtoType.FILE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class FileNameSorterTest {

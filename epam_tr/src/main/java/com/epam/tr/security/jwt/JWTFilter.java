@@ -1,8 +1,7 @@
 package com.epam.tr.security.jwt;
 
-import com.epam.tr.security.request.RequestProcessor;
+import com.epam.tr.security.RequestProcessor;
 import com.epam.tr.service.SecurityUserDetailService;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

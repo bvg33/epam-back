@@ -24,10 +24,12 @@ public class SecurityUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser appUser = dao.getUserByNickname(username);
         if (appUser == null) {
-            String message = String.format("User with username %s doesnt exist", username);
+            String message = String.format("User with username %s doesnt exist.", username);
             throw new UsernameNotFoundException(message);
         }
-        List<SimpleGrantedAuthority> authorities = singletonList(new SimpleGrantedAuthority("ROLE_" + appUser.getUserRole().toString()));
+        String role = "ROLE_" + appUser.getUserRole().toString();
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
+        List<SimpleGrantedAuthority> authorities = singletonList(authority);
         String login = appUser.getLogin();
         String password = appUser.getPassword();
         return new User(login, password, authorities);

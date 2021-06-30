@@ -1,6 +1,6 @@
 package com.epam.tr.controller;
 
-import com.epam.tr.controller.error.ErrorResponse;
+import com.epam.tr.dto.ErrorResponse;
 import com.epam.tr.exceptions.InvalidCredentialsException;
 import com.epam.tr.exceptions.InvalidFileException;
 import org.springframework.http.ResponseEntity;

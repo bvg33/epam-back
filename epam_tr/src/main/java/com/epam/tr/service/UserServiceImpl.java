@@ -5,8 +5,8 @@ import com.epam.tr.dto.UserDto;
 import com.epam.tr.entities.AppUser;
 import com.epam.tr.entities.UserRole;
 import com.epam.tr.exceptions.InvalidCredentialsException;
-import com.epam.tr.service.logic.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,24 +16,22 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private Dao<AppUser> dao;
-    private Validator<AppUser> validator;
-
     @Autowired
-    public UserServiceImpl(Dao<AppUser> dao, Validator<AppUser> validator) {
-        this.dao = dao;
-        this.validator = validator;
+    private Dao<AppUser> dao;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+    @Override
+    public void create(UserDto userDto) throws InvalidCredentialsException {
+        String login = userDto.getLogin();
+        String password = userDto.getPassword();
+        String encodePassword = encoder.encode(password);
+        AppUser newAppUser = new AppUser(login, encodePassword);
+        dao.insert(newAppUser);
     }
 
     @Override
-    public void create(AppUser entity) throws InvalidCredentialsException {
-        validator.isValid(entity);
-        dao.insert(entity);
-    }
-
-    @Override
-    public void update(int oldUserId, UserDto newEntity) throws InvalidCredentialsException {
-        validator.isValid(newEntity.to());
+    public void update(int oldUserId, UserDto newEntity) {
         String login = newEntity.getLogin();
         String password = newEntity.getPassword();
         UserRole role = newEntity.getUserRole();
@@ -41,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(int userId) throws InvalidCredentialsException {
+    public void delete(int userId) {
         AppUser entity = dao.getById(userId);
         dao.delete(entity);
     }

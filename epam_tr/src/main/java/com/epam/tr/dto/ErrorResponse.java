@@ -1,4 +1,4 @@
-package com.epam.tr.controller.error;
+package com.epam.tr.dto;
 
 public class ErrorResponse {
 

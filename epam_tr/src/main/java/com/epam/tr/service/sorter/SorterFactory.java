@@ -1,4 +1,4 @@
-package com.epam.tr.service.logic.sorter;
+package com.epam.tr.service.sorter;
 
 import com.epam.tr.dto.FileDto;
 
@@ -28,7 +28,7 @@ public class SorterFactory {
             case SORT_BY_TYPE_DESC:
                 return new FileTypeSorter().reversed();
             default: {
-                String message = String.format("There is no sorter of this type : %s", sorterType);
+                String message = String.format("There is no sorter of this type : %s.", sorterType);
                 throw new IllegalArgumentException(message);
             }
         }

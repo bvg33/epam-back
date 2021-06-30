@@ -13,7 +13,7 @@ public interface UserService{
 
     UserDto getById(int id);
 
-    void create(AppUser Entity);
+    void create(UserDto user);
 
     void update(int oldUserId, UserDto newEntity);
 

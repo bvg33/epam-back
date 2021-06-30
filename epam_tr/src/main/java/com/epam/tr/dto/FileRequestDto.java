@@ -1,13 +1,23 @@
 package com.epam.tr.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class FileRequestDto {
+    @NotNull
     private List<String> folder;
+    @NotNull
+    @Size(min=1)
     private String drive;
-    private String parameter;
+    @Pattern(regexp = "SortBy\\w{4}_\\w{3,4}")
+    private String sorterParameter;
+    @Pattern(regexp = "\\w+")
     private String mask;
+    @Size(min=4,max=6)
     private String type;
+    @Size(min=2,max=15)
     private String name;
 
     public String getType() {
@@ -33,12 +43,12 @@ public class FileRequestDto {
         return folder;
     }
 
-    public String getParameter() {
-        return parameter;
+    public String getSorterParameter() {
+        return sorterParameter;
     }
 
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public void setSorterParameter(String sorterParameter) {
+        this.sorterParameter = sorterParameter;
     }
 
     public String getMask() {

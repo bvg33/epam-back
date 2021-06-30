@@ -1,4 +1,4 @@
-package com.epam.tr.service.logic.sorter;
+package com.epam.tr.service.sorter;
 
 import com.epam.tr.dto.FileDto;
 
